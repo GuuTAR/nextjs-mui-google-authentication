@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
-import { Stack } from '@mui/material'
 
 import RootProvider from '@/providers/RootProvider'
 
@@ -29,9 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <RootProvider>
-          <Stack>{children}</Stack>
-        </RootProvider>
+        <RootProvider>{children}</RootProvider>
       </body>
     </html>
   )
