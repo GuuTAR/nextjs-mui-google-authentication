@@ -1,9 +1,10 @@
 'use client'
 
 import { ReactNode } from 'react'
-import { ThemeProvider } from '@mui/material'
+import { Stack, ThemeProvider } from '@mui/material'
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter'
 
 import { theme } from '@/theme/theme'
 
@@ -15,10 +16,14 @@ type Props = {
 
 export default function RootProvider({ children }: Props) {
   return (
-    <AppDataProvider>
-      <ThemeProvider theme={theme}>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>{children}</LocalizationProvider>
-      </ThemeProvider>
-    </AppDataProvider>
+    <AppRouterCacheProvider>
+      <AppDataProvider>
+        <ThemeProvider theme={theme}>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <Stack sx={{ height: '100vh' }}>{children}</Stack>
+          </LocalizationProvider>
+        </ThemeProvider>
+      </AppDataProvider>
+    </AppRouterCacheProvider>
   )
 }
