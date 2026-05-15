@@ -6,11 +6,12 @@ import { useRouter } from 'next/navigation'
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime'
 import { Auth, GoogleAuthProvider, signInWithPopup, UserCredential } from 'firebase/auth'
 import { Button, Typography } from '@mui/material'
-import { useNotifications } from '@toolpad/core/useNotifications'
 
 import { firebaseClient } from '@/libs/firebase-client'
 
 import { authApi } from '@/api/authApi'
+
+import { useAppData } from '@/providers/AppDataProvider'
 
 import useAuth from '@/hooks/useAuth'
 
@@ -19,7 +20,7 @@ import { GoogleLoginButton, LoginContainer, LoginPageStyle } from './style'
 export default function LoginPage() {
   const router: AppRouterInstance = useRouter()
   const { isAuthEnabled } = useAuth()
-  const notifications = useNotifications()
+  const { handleShowNotification } = useAppData()
 
   const handleLogin = useCallback(async () => {
     const provider = new GoogleAuthProvider()
@@ -27,8 +28,8 @@ export default function LoginPage() {
     if (isAuthEnabled) {
       const firebaseAuth: Auth | undefined = firebaseClient.getAuth()
       if (!firebaseAuth) {
-        notifications.show('Auth is not available!', {
-          autoHideDuration: 3000,
+        handleShowNotification({
+          message: 'Auth is not available!',
           severity: 'error',
         })
         return
@@ -41,19 +42,19 @@ export default function LoginPage() {
       // Send the ID token to the backend to create a session
       const isSessionSet: boolean = await authApi.setSession(idToken)
       if (!isSessionSet) {
-        notifications.show('Session creation failed!', {
-          autoHideDuration: 3000,
+        handleShowNotification({
+          message: 'Session creation failed!',
           severity: 'error',
         })
         return
       }
     }
-    notifications.show('Login successful!', {
-      autoHideDuration: 3000,
+    handleShowNotification({
+      message: 'Login successful!',
       severity: 'success',
     })
     router.push('/')
-  }, [isAuthEnabled, notifications, router])
+  }, [isAuthEnabled, handleShowNotification, router])
 
   return (
     <LoginPageStyle>

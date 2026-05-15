@@ -4,9 +4,10 @@ import { useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime'
-import { useNotifications } from '@toolpad/core/useNotifications'
 
 import { authApi } from '@/api/authApi'
+
+import { useAppData } from '@/providers/AppDataProvider'
 
 import useAuth from '@/hooks/useAuth'
 
@@ -15,7 +16,7 @@ import styles from './page.module.css'
 export default function HomePage() {
   const router: AppRouterInstance = useRouter()
   const { isAuthEnabled, userEmail } = useAuth()
-  const notifications = useNotifications()
+  const { handleShowNotification } = useAppData()
 
   const handleLogout = useCallback(async () => {
     if (!isAuthEnabled) {
@@ -25,13 +26,18 @@ export default function HomePage() {
 
     const isSuccess: boolean = await authApi.logout()
     if (!isSuccess) {
-      notifications.show('Logout failed!', {
-        autoHideDuration: 3000,
+      handleShowNotification({
+        message: 'Logout failed!',
         severity: 'error',
       })
+      return
     }
+    handleShowNotification({
+      message: 'Logout successful!',
+      severity: 'success',
+    })
     router.push('/login')
-  }, [isAuthEnabled, notifications, router])
+  }, [isAuthEnabled, handleShowNotification, router])
 
   return (
     <div className={styles.page}>
