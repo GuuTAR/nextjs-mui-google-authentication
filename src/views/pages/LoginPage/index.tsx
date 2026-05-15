@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime'
 import { Auth, GoogleAuthProvider, signInWithPopup, UserCredential } from 'firebase/auth'
 import { Button, Typography } from '@mui/material'
+import { useNotifications } from '@toolpad/core/useNotifications'
 
 import { firebaseClient } from '@/libs/firebase-client'
 
@@ -18,14 +19,18 @@ import { GoogleLoginButton, LoginContainer, LoginPageStyle } from './style'
 export default function LoginPage() {
   const router: AppRouterInstance = useRouter()
   const { isAuthEnabled } = useAuth()
+  const notifications = useNotifications()
 
   const handleLogin = useCallback(async () => {
     const provider = new GoogleAuthProvider()
 
     if (isAuthEnabled) {
       const firebaseAuth: Auth | undefined = firebaseClient.getAuth()
-      // TODO: Handle case when Firebase Auth instance is not available (e.g., show error message)
       if (!firebaseAuth) {
+        notifications.show('Auth is not available!', {
+          autoHideDuration: 3000,
+          severity: 'error',
+        })
         return
       }
 
@@ -36,12 +41,19 @@ export default function LoginPage() {
       // Send the ID token to the backend to create a session
       const isSessionSet: boolean = await authApi.setSession(idToken)
       if (!isSessionSet) {
-        // TODO: Handle session setting failure (e.g., show error message)
+        notifications.show('Session creation failed!', {
+          autoHideDuration: 3000,
+          severity: 'error',
+        })
         return
       }
     }
+    notifications.show('Login successful!', {
+      autoHideDuration: 3000,
+      severity: 'success',
+    })
     router.push('/')
-  }, [router, isAuthEnabled])
+  }, [isAuthEnabled, notifications, router])
 
   return (
     <LoginPageStyle>
@@ -50,14 +62,12 @@ export default function LoginPage() {
           Sign in to Your Account
         </Typography>
         {isAuthEnabled ? (
-          <Button variant="outlined" onClick={handleLogin}>
-            <GoogleLoginButton>
-              <Image src="/icons/google.svg" alt="Google Icon" width={24} height={24} />
-              <Typography variant="body2" align="center" color="textPrimary">
-                Sign in with Google
-              </Typography>
-            </GoogleLoginButton>
-          </Button>
+          <GoogleLoginButton variant="outlined" onClick={handleLogin}>
+            <Image src="/icons/google.svg" alt="Google Icon" width={24} height={24} />
+            <Typography variant="body2" align="center" color="textPrimary">
+              Sign in with Google
+            </Typography>
+          </GoogleLoginButton>
         ) : (
           <Button variant="outlined" onClick={handleLogin}>
             <Typography variant="body2" align="center" color="textPrimary">
