@@ -19,9 +19,11 @@ class AuthService {
         throw new Error('Firebase Admin Auth is not initialized')
       }
 
+      const expireInSeconds: number = expiresIn * 24 * 60 * 60
+
       // Create a session cookie with the provided ID token and expiration time
       const sessionCookie: string = await this.firebaseAdminAuth.createSessionCookie(idToken, {
-        expiresIn: expiresIn * 24 * 60 * 60 * 1_000, // Convert days to milliseconds
+        expiresIn: expireInSeconds * 1_000, // Convert days to milliseconds
       })
 
       // Set the session cookie in the response headers
@@ -37,7 +39,7 @@ class AuthService {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
-        maxAge: expiresIn,
+        maxAge: expireInSeconds,
         path: '/',
       })
       return true
