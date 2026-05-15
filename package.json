@@ -16,7 +16,6 @@
     "@mui/material": "^9.0.1",
     "@mui/material-nextjs": "^9.0.1",
     "@mui/x-date-pickers": "^9.1.0",
-    "@toolpad/core": "^0.16.0",
     "axios": "^1.16.0",
     "dayjs": "^1.11.20",
     "firebase": "^12.13.0",
