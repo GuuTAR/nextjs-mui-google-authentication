@@ -1,4 +1,4 @@
-import { AppConfig } from '@/types/types'
+import { AppConfig } from '@/types/AppConfig'
 
 class ConfigService {
   private config: AppConfig
