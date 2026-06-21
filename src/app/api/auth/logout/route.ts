@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers'
 
-import { STATUS_CODE } from '@/data/enum'
+import { STATUS_CODE } from '@/enum/global'
 
 import { apiService } from '@/services/apiService'
 import { authService } from '@/services/authService'
