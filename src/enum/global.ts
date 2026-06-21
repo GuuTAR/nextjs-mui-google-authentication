@@ -7,3 +7,15 @@ export enum STATUS_CODE {
   INTERNAL_SERVER_ERROR = 500,
   SERVICE_UNAVAILABLE = 503,
 }
+
+export enum LANGUAGE {
+  ENGLISH = 'EN',
+  THAI = 'TH',
+}
+
+export enum ALERT_COLOR {
+  ERROR = 'error',
+  WARNING = 'warning',
+  INFO = 'info',
+  SUCCESS = 'success',
+}
