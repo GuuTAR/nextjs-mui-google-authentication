@@ -1,7 +1,7 @@
 import { App, cert, getApps, initializeApp } from 'firebase-admin/app'
 import { Auth, getAuth } from 'firebase-admin/auth'
 
-import { AppConfig } from '@/types/types'
+import { AppConfig } from '@/types/AppConfig'
 
 import { configService } from '@/services/configService'
 
