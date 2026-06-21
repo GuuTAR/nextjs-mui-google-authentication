@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios'
 
-import { STATUS_CODE } from '@/data/enum'
+import { STATUS_CODE } from '@/enum/global'
 
 import { ApiService, apiService } from '@/services/apiService'
 
