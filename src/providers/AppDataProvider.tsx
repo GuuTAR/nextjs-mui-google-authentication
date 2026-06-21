@@ -2,12 +2,16 @@ import { createContext, ReactNode, useCallback, useContext, useEffect, useState 
 
 import { NotificationDetail } from '@/types/Notification'
 
+import { LANGUAGE } from '@/enum/global'
+
 import { localStorageService } from '@/services/localStorageService'
 
 export type AppDataContextType = {
   displayName: string
   setDisplayName: (displayName: string) => void
 
+  language: LANGUAGE
+  setLanguage: (language: LANGUAGE) => void
   isNotificationVisible: boolean
   setIsNotificationVisible: (isVisible: boolean) => void
   notificationDetail: NotificationDetail
@@ -27,6 +31,7 @@ export const AppDataProvider = ({ children }: Props) => {
 
   const [displayName, _setDisplayName] = useState<string>('')
 
+  const [language, _setLanguage] = useState<LANGUAGE>(LANGUAGE.ENGLISH)
   const [isNotificationVisible, setIsNotificationVisible] = useState<boolean>(false)
   const [notificationDetail, setNotificationDetail] = useState<NotificationDetail>({
     message: '',
@@ -39,6 +44,8 @@ export const AppDataProvider = ({ children }: Props) => {
   useEffect(() => {
     const initialize = async () => {
       _setDisplayName(localStorageService.getValue('displayName') ?? '')
+      const savedLanguage = localStorageService.getValue('language') as LANGUAGE | null
+      if (savedLanguage) _setLanguage(savedLanguage)
 
       setIsDataLoaded(true)
     }
@@ -49,6 +56,11 @@ export const AppDataProvider = ({ children }: Props) => {
   const setDisplayName = useCallback((displayName: string) => {
     _setDisplayName(displayName)
     localStorageService.setValue('displayName', displayName)
+  }, [])
+
+  const setLanguage = useCallback((language: LANGUAGE) => {
+    _setLanguage(language)
+    localStorageService.setValue('language', language)
   }, [])
 
   const handleShowNotification = useCallback((_notificationDetail: NotificationDetail) => {
@@ -66,6 +78,8 @@ export const AppDataProvider = ({ children }: Props) => {
       value={{
         displayName,
         setDisplayName,
+        language,
+        setLanguage,
         isDataLoaded,
         isNotificationVisible,
         setIsNotificationVisible,

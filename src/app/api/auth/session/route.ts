@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server'
 
-import { STATUS_CODE } from '@/data/enum'
+import { STATUS_CODE } from '@/enum/global'
 
 import { apiService } from '@/services/apiService'
 import { configService } from '@/services/configService'
