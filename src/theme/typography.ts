@@ -28,4 +28,8 @@ export const TYPOGRAPHY: TypographyVariantsOptions = {
   caption: {
     fontSize: 12,
   },
+  overline: {
+    fontSize: 12,
+    textTransform: 'uppercase',
+  },
 }
