@@ -12,6 +12,10 @@ class ConfigService {
       isEnableFirebaseAuth: JSON.parse(process.env.NEXT_PUBLIC_ENABLE_FIREBASE_AUTH || '0'),
       userSessionLifetimeDays: parseInt(process.env.USER_SESSION_LIFETIME_DAYS || '7'),
       apiTimeout: parseInt(process.env.API_TIMEOUT || '5000'),
+      backendUrl: process.env.NEXT_PUBLIC_BACKEND_URL || '',
+      demoUser: process.env.NEXT_PUBLIC_DEMO_USER || '',
+      demoPassword: process.env.NEXT_PUBLIC_DEMO_PASSWORD || '',
+      demoUid: process.env.NEXT_PUBLIC_DEMO_UID || '',
       firebaseConfig: {
         apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || '',
         authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || '',

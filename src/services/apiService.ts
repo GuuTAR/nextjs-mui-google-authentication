@@ -1,4 +1,3 @@
-import { NextResponse } from 'next/server'
 import axios, { AxiosInstance, AxiosResponse } from 'axios'
 
 import { configService } from '@/services/configService'
@@ -6,8 +5,9 @@ import { configService } from '@/services/configService'
 export class ApiService {
   private api: AxiosInstance
 
-  constructor(apiTimeout: number) {
+  constructor({ backendUrl, apiTimeout }: { apiTimeout: number; backendUrl?: string }) {
     this.api = axios.create({
+      baseURL: backendUrl,
       timeout: apiTimeout,
     })
   }
@@ -27,18 +27,14 @@ export class ApiService {
   public delete = <T>(url: string): Promise<AxiosResponse<T>> => {
     return this.api.delete<T>(url)
   }
-
-  public responseBody = <T>(statusCode: number, responseData?: { message?: string; body?: T }): NextResponse => {
-    return NextResponse.json(
-      {
-        message: responseData?.message,
-        body: responseData?.body,
-      },
-      {
-        status: statusCode,
-      },
-    )
-  }
 }
 
-export const apiService = new ApiService(configService.getConfig().apiTimeout)
+export const createApiService = (): ApiService => {
+  const { backendUrl, apiTimeout } = configService.getConfig()
+  return new ApiService({ apiTimeout, backendUrl })
+}
+
+export const createLocalApiService = (): ApiService => {
+  const { apiTimeout } = configService.getConfig()
+  return new ApiService({ apiTimeout })
+}

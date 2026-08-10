@@ -2,9 +2,9 @@ import { NextRequest } from 'next/server'
 
 import { STATUS_CODE } from '@/enum/global'
 
-import { apiService } from '@/services/apiService'
-import { configService } from '@/services/configService'
 import { authService } from '@/services/authService'
+import { configService } from '@/services/configService'
+import { utilService } from '@/services/utilService'
 
 export async function POST(request: NextRequest) {
   try {
@@ -17,12 +17,12 @@ export async function POST(request: NextRequest) {
       configService.getConfig().userSessionLifetimeDays,
     )
     if (!isCreated) {
-      return apiService.responseBody(STATUS_CODE.INTERNAL_SERVER_ERROR, { message: 'Failed to create user session' })
+      return utilService.responseBody(STATUS_CODE.INTERNAL_SERVER_ERROR, { message: 'Failed to create user session' })
     }
 
-    return apiService.responseBody(STATUS_CODE.OK)
+    return utilService.responseBody(STATUS_CODE.OK)
   } catch (error) {
     console.error('Error in POST /api/auth/session:', (error as Error).message)
-    return apiService.responseBody(STATUS_CODE.INTERNAL_SERVER_ERROR, { message: (error as Error).message })
+    return utilService.responseBody(STATUS_CODE.INTERNAL_SERVER_ERROR, { message: (error as Error).message })
   }
 }
