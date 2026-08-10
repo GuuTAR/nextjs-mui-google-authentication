@@ -2,7 +2,7 @@ import { AxiosResponse } from 'axios'
 
 import { STATUS_CODE } from '@/enum/global'
 
-import { ApiService, apiService } from '@/services/apiService'
+import { ApiService, createLocalApiService } from '@/services/apiService'
 
 class AuthAPI {
   private api: ApiService
@@ -11,21 +11,27 @@ class AuthAPI {
     this.api = apiService
   }
 
-  public setSession = async <T>(idToken: string): Promise<boolean> => {
-    const result: AxiosResponse = await this.api.post<T, { idToken: string }>('/api/auth/session', { idToken })
-    if (result.status === STATUS_CODE.OK) {
-      return true
+  public login = async (idToken: string): Promise<boolean> => {
+    try {
+      const result: AxiosResponse = await this.api.post<undefined, { idToken: string }>('/api/auth/session', {
+        idToken,
+      })
+      return result.status === STATUS_CODE.OK
+    } catch (error) {
+      console.error('Error in POST /api/auth/session:', (error as Error).message)
+      return false
     }
-    return false
   }
 
-  public logout = async <T>(): Promise<boolean> => {
-    const result: AxiosResponse = await this.api.post<T, undefined>('/api/auth/logout')
-    if (result.status === STATUS_CODE.OK) {
-      return true
+  public logout = async (): Promise<boolean> => {
+    try {
+      const result: AxiosResponse = await this.api.post<undefined, undefined>('/api/auth/logout')
+      return result.status === STATUS_CODE.OK
+    } catch (error) {
+      console.error('Error in POST /api/auth/logout:', (error as Error).message)
+      return false
     }
-    return false
   }
 }
 
-export const authApi = new AuthAPI(apiService)
+export const authApi = new AuthAPI(createLocalApiService())
