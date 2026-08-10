@@ -22,5 +22,12 @@ export const PALETTE: PaletteOptions = {
     secondary: '#3A4A6E',
     disabled: '#A4AFC9',
   },
+  divider: '#F2F6FD',
   background: { default: '#F2F6FD', paper: '#FFFFFF' },
+  custom: {
+    loginPage: {
+      descriptionBackground:
+        'linear-gradient(155deg, rgb(45, 127, 249) 0%, rgb(27, 95, 214) 55%, rgb(15, 79, 203) 100%)',
+    },
+  },
 }
