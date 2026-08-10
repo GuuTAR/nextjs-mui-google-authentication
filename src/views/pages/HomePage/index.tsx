@@ -2,12 +2,12 @@
 
 import Image from 'next/image'
 
-import useAuth from '@/hooks/useAuth'
+import { useUserData } from '@/providers/UserDataProvider'
 
 import styles from './page.module.css'
 
 export default function HomePage() {
-  const { userEmail, handleLogout } = useAuth()
+  const { userEmail, handleLogout } = useUserData()
 
   return (
     <div className={styles.page}>
