@@ -9,7 +9,6 @@ class ConfigService {
 
   private initialization = (): AppConfig => {
     return {
-      isEnableFirebaseAuth: JSON.parse(process.env.NEXT_PUBLIC_ENABLE_FIREBASE_AUTH || '0'),
       userSessionLifetimeDays: parseInt(process.env.USER_SESSION_LIFETIME_DAYS || '7'),
       apiTimeout: parseInt(process.env.API_TIMEOUT || '5000'),
       backendUrl: process.env.NEXT_PUBLIC_BACKEND_URL || '',

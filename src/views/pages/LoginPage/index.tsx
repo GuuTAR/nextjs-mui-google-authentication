@@ -16,7 +16,7 @@ import * as Styles from './style'
 
 export default function LoginPage() {
   const { language } = useAppData()
-  const { isAuthEnabled, handleLogin, handleDemoLogin } = useUserData()
+  const { handleLogin, handleDemoLogin } = useUserData()
 
   return (
     <Styles.LoginPageStyle>
@@ -31,21 +31,17 @@ export default function LoginPage() {
           <BoldText variant="h4" color="textPrimary">
             {Languages.SIGN_IN[language]}
           </BoldText>
-          {isAuthEnabled ? (
-            <Styles.LoginButton variant="outlined" onClick={handleLogin}>
-              <Image src="/icons/google.svg" alt="Google Icon" width={24} height={24} />
-              <Typography variant="body2" color="textPrimary">
-                {Languages.CONTINUE_WITH_GOOGLE[language]}
-              </Typography>
-            </Styles.LoginButton>
-          ) : null}
-          {isAuthEnabled ? (
-            <Divider>
-              <Typography variant="body2" color="textDisabled">
-                {Languages.OR[language]}
-              </Typography>
-            </Divider>
-          ) : null}
+          <Styles.LoginButton variant="outlined" onClick={handleLogin}>
+            <Image src="/icons/google.svg" alt="Google Icon" width={24} height={24} />
+            <Typography variant="body2" color="textPrimary">
+              {Languages.CONTINUE_WITH_GOOGLE[language]}
+            </Typography>
+          </Styles.LoginButton>
+          <Divider>
+            <Typography variant="body2" color="textDisabled">
+              {Languages.OR[language]}
+            </Typography>
+          </Divider>
           <Styles.LoginButton variant="contained" onClick={handleDemoLogin}>
             <PlayArrowIcon />
             <Typography variant="body2">{Languages.PLAY_AS_DEMO_USER[language]}</Typography>
