@@ -9,6 +9,11 @@ class FirebaseAdminClient {
   private app: App | undefined
 
   constructor(config: AppConfig) {
+    const { firebaseAdminConfig } = config
+
+    if (typeof firebaseAdminConfig === 'string') return
+    if (!firebaseAdminConfig.projectId || !firebaseAdminConfig.privateKey || !firebaseAdminConfig.clientEmail) return
+
     this.app = getApps().length > 0 ? getApps()[0] : initializeApp({ credential: cert(config.firebaseAdminConfig) })
   }
 
