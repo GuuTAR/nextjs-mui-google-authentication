@@ -1,13 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-import { configService } from '@/services/configService'
-
 export function proxy(request: NextRequest) {
-  const isAuthEnabled: boolean = configService.getConfig().isEnableFirebaseAuth
-  if (!isAuthEnabled) {
-    return NextResponse.next()
-  }
-
   // Check for session cookie to determine if the user is authenticated
   const session = request.cookies.get('session')
   if (!session) {

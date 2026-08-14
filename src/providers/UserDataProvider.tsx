@@ -15,22 +15,22 @@ import { firebaseClient } from '@/libs/firebase-client'
 import { ALERT_COLOR } from '@/enum/global'
 
 import { DISPLAY_DEMO_USER } from '@/data/demo'
-import {
-  AUTH_UNAVAILABLE_MESSAGE,
-  LOGIN_FAILURE_MESSAGE,
-  LOGIN_SUCCESS_MESSAGE,
-  SESSION_CREATE_FAILURE_MESSAGE,
-} from '@/lang/login'
-import { LOGOUT_FAILURE_MESSAGE, LOGOUT_SUCCESS_MESSAGE } from '@/lang/logout'
 
 import { authApi } from '@/api/authApi'
 
 import { configService } from '@/services/configService'
 
 import { useAppData } from '@/providers/AppDataProvider'
+import {
+  AUTH_UNAVAILABLE_MESSAGE,
+  LOGIN_FAILURE_MESSAGE,
+  LOGIN_SUCCESS_MESSAGE,
+  LOGOUT_FAILURE_MESSAGE,
+  LOGOUT_SUCCESS_MESSAGE,
+  SESSION_CREATE_FAILURE_MESSAGE,
+} from '@/lang/auth'
 
 export type UserDataContextType = {
-  isAuthEnabled: boolean
   userId: string
   userEmail: string
   userDisplayName: string
@@ -56,10 +56,6 @@ export const UserDataProvider = ({ children }: Props) => {
   const [userEmail, setUserEmail] = useState<string>('')
   const [userDisplayName, setUserDisplayName] = useState<string>('')
   const [userPhotoURL, setUserPhotoURL] = useState<string>('')
-
-  const isAuthEnabled: boolean = useMemo(() => {
-    return configService.getConfig().isEnableFirebaseAuth
-  }, [])
 
   const isDemoUser: boolean = useMemo(() => {
     return userId === configService.getConfig().demoUid
@@ -94,29 +90,27 @@ export const UserDataProvider = ({ children }: Props) => {
     try {
       const provider = new GoogleAuthProvider()
 
-      if (isAuthEnabled) {
-        const firebaseAuth: Auth | undefined = firebaseClient.getAuth()
-        if (!firebaseAuth) {
-          handleShowNotification({
-            message: AUTH_UNAVAILABLE_MESSAGE[language],
-            severity: ALERT_COLOR.ERROR,
-          })
-          return
-        }
-
-        const result: UserCredential = await signInWithPopup(firebaseAuth, provider)
-        const idToken: string = await result.user.getIdToken()
-
-        const isSessionSet: boolean = await authApi.login(idToken)
-        if (!isSessionSet) {
-          handleShowNotification({
-            message: SESSION_CREATE_FAILURE_MESSAGE[language],
-            severity: ALERT_COLOR.ERROR,
-          })
-          return
-        }
-        setUserId(result.user.uid)
+      const firebaseAuth: Auth | undefined = firebaseClient.getAuth()
+      if (!firebaseAuth) {
+        handleShowNotification({
+          message: AUTH_UNAVAILABLE_MESSAGE[language],
+          severity: ALERT_COLOR.ERROR,
+        })
+        return
       }
+
+      const result: UserCredential = await signInWithPopup(firebaseAuth, provider)
+      const idToken: string = await result.user.getIdToken()
+
+      const isSessionSet: boolean = await authApi.login(idToken)
+      if (!isSessionSet) {
+        handleShowNotification({
+          message: SESSION_CREATE_FAILURE_MESSAGE[language],
+          severity: ALERT_COLOR.ERROR,
+        })
+        return
+      }
+      setUserId(result.user.uid)
 
       handleShowNotification({
         message: LOGIN_SUCCESS_MESSAGE[language],
@@ -131,37 +125,35 @@ export const UserDataProvider = ({ children }: Props) => {
       })
       return
     }
-  }, [isAuthEnabled, handleShowNotification, language, router])
+  }, [handleShowNotification, language, router])
 
   const handleDemoLogin = useCallback(async () => {
     try {
-      if (isAuthEnabled) {
-        const firebaseAuth: Auth | undefined = firebaseClient.getAuth()
-        if (!firebaseAuth) {
-          handleShowNotification({
-            message: AUTH_UNAVAILABLE_MESSAGE[language],
-            severity: ALERT_COLOR.ERROR,
-          })
-          return
-        }
-
-        const result: UserCredential = await signInWithEmailAndPassword(
-          firebaseAuth,
-          configService.getConfig().demoUser,
-          configService.getConfig().demoPassword,
-        )
-        const idToken: string = await result.user.getIdToken()
-
-        const isSessionSet: boolean = await authApi.login(idToken)
-        if (!isSessionSet) {
-          handleShowNotification({
-            message: SESSION_CREATE_FAILURE_MESSAGE[language],
-            severity: ALERT_COLOR.ERROR,
-          })
-          return
-        }
-        setUserId(result.user.uid)
+      const firebaseAuth: Auth | undefined = firebaseClient.getAuth()
+      if (!firebaseAuth) {
+        handleShowNotification({
+          message: AUTH_UNAVAILABLE_MESSAGE[language],
+          severity: ALERT_COLOR.ERROR,
+        })
+        return
       }
+
+      const result: UserCredential = await signInWithEmailAndPassword(
+        firebaseAuth,
+        configService.getConfig().demoUser,
+        configService.getConfig().demoPassword,
+      )
+      const idToken: string = await result.user.getIdToken()
+
+      const isSessionSet: boolean = await authApi.login(idToken)
+      if (!isSessionSet) {
+        handleShowNotification({
+          message: SESSION_CREATE_FAILURE_MESSAGE[language],
+          severity: ALERT_COLOR.ERROR,
+        })
+        return
+      }
+      setUserId(result.user.uid)
 
       handleShowNotification({
         message: LOGIN_SUCCESS_MESSAGE[language],
@@ -175,31 +167,30 @@ export const UserDataProvider = ({ children }: Props) => {
         severity: ALERT_COLOR.ERROR,
       })
     }
-  }, [isAuthEnabled, handleShowNotification, language, router])
+  }, [handleShowNotification, language, router])
 
   const handleLogout = useCallback(async () => {
     try {
-      if (isAuthEnabled) {
-        const firebaseAuth: Auth | undefined = firebaseClient.getAuth()
-        if (!firebaseAuth) {
-          handleShowNotification({
-            message: AUTH_UNAVAILABLE_MESSAGE[language],
-            severity: ALERT_COLOR.ERROR,
-          })
-          return
-        }
-
-        const isSuccess: boolean = await authApi.logout()
-        if (!isSuccess) {
-          handleShowNotification({
-            message: LOGOUT_FAILURE_MESSAGE[language],
-            severity: ALERT_COLOR.ERROR,
-          })
-          return
-        }
-        await signOut(firebaseAuth)
-        setUserId('')
+      const firebaseAuth: Auth | undefined = firebaseClient.getAuth()
+      if (!firebaseAuth) {
+        handleShowNotification({
+          message: AUTH_UNAVAILABLE_MESSAGE[language],
+          severity: ALERT_COLOR.ERROR,
+        })
+        return
       }
+
+      const isSuccess: boolean = await authApi.logout()
+      if (!isSuccess) {
+        handleShowNotification({
+          message: LOGOUT_FAILURE_MESSAGE[language],
+          severity: ALERT_COLOR.ERROR,
+        })
+        return
+      }
+      await signOut(firebaseAuth)
+      setUserId('')
+
       handleShowNotification({
         message: LOGOUT_SUCCESS_MESSAGE[language],
         severity: ALERT_COLOR.SUCCESS,
@@ -213,12 +204,11 @@ export const UserDataProvider = ({ children }: Props) => {
       })
       return
     }
-  }, [handleShowNotification, isAuthEnabled, language, router])
+  }, [handleShowNotification, language, router])
 
   return (
     <UserDataContext.Provider
       value={{
-        isAuthEnabled,
         userId,
         userEmail,
         userDisplayName,

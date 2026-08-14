@@ -6,24 +6,19 @@ import { AppConfig } from '@/types/AppConfig'
 import { configService } from '@/services/configService'
 
 class FirebaseAdminClient {
-  private isActive: boolean
   private app: App | undefined
 
   constructor(config: AppConfig) {
-    // Initialize Firebase Admin SDK only if Firebase Auth is enabled in the configuration
-    this.isActive = config.isEnableFirebaseAuth
-    if (!this.isActive) return
+    const { firebaseAdminConfig } = config
 
-    // Initialize Firebase Admin SDK with the provided configuration
+    if (typeof firebaseAdminConfig === 'string') return
+    if (!firebaseAdminConfig.projectId || !firebaseAdminConfig.privateKey || !firebaseAdminConfig.clientEmail) return
+
     this.app = getApps().length > 0 ? getApps()[0] : initializeApp({ credential: cert(config.firebaseAdminConfig) })
   }
 
-  public isEnableFirebaseAuth = (): boolean => {
-    return this.isActive
-  }
-
   public getAuth = (): Auth | undefined => {
-    if (!this.isActive) return
+    if (!this.app) return
     return getAuth(this.app)
   }
 }
