@@ -18,6 +18,7 @@ class FirebaseAdminClient {
   }
 
   public getAuth = (): Auth | undefined => {
+    if (!this.app) return
     return getAuth(this.app)
   }
 }
