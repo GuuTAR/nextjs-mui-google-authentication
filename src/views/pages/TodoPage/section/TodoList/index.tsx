@@ -6,7 +6,7 @@ import { Stack, Typography } from '@mui/material'
 
 import TaskAltIcon from '@mui/icons-material/TaskAlt'
 
-import { Todo } from '@/types/Todo'
+import { DisplayTodo } from '@/types/Todo'
 
 import { useAppData } from '@/providers/AppDataProvider'
 
@@ -18,8 +18,8 @@ import * as Languages from './lang'
 import * as Styles from './style'
 
 type Props = {
-  todos: Todo[]
-  filteredTodos: Todo[]
+  todos: DisplayTodo[]
+  filteredTodos: DisplayTodo[]
   onToggle: (id: string) => void
   onDelete: (id: string) => void
   onClearCompleted: () => void

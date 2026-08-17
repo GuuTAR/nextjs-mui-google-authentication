@@ -6,12 +6,12 @@ import { Checkbox, IconButton } from '@mui/material'
 
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutlined'
 
-import { Todo } from '@/types/Todo'
+import { DisplayTodo } from '@/types/Todo'
 
 import * as Styles from './style'
 
 type Props = {
-  todo: Todo
+  todo: DisplayTodo
   onToggle: (id: string) => void
   onDelete: (id: string) => void
 }

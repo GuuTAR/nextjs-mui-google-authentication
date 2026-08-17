@@ -29,3 +29,33 @@ export const FILTER_COMPLETED: Record<LANGUAGE, string> = {
   [LANGUAGE.ENGLISH]: 'Completed',
   [LANGUAGE.THAI]: 'เสร็จแล้ว',
 }
+
+export const CREATE_TODO_SUCCESS_MESSAGE: Record<LANGUAGE, string> = {
+  [LANGUAGE.ENGLISH]: 'Todo created successfully!',
+  [LANGUAGE.THAI]: 'สร้างงานสำเร็จ!',
+}
+
+export const CREATE_TODO_FAILURE_MESSAGE: Record<LANGUAGE, string> = {
+  [LANGUAGE.ENGLISH]: 'Failed to create todo.',
+  [LANGUAGE.THAI]: 'สร้างงานไม่สำเร็จ!',
+}
+
+export const RESET_TODOS_SUCCESS_MESSAGE: Record<LANGUAGE, string> = {
+  [LANGUAGE.ENGLISH]: 'All todos have been reset successfully!',
+  [LANGUAGE.THAI]: 'รีเซ็ตงานทั้งหมดสำเร็จ!',
+}
+
+export const RESET_TODOS_FAILURE_MESSAGE: Record<LANGUAGE, string> = {
+  [LANGUAGE.ENGLISH]: 'Failed to reset todos.',
+  [LANGUAGE.THAI]: 'รีเซ็ตงานทั้งหมดไม่สำเร็จ!',
+}
+
+export const DELETE_TODO_SUCCESS_MESSAGE: Record<LANGUAGE, string> = {
+  [LANGUAGE.ENGLISH]: 'Todo deleted successfully!',
+  [LANGUAGE.THAI]: 'ลบงานสำเร็จ!',
+}
+
+export const DELETE_TODO_FAILURE_MESSAGE: Record<LANGUAGE, string> = {
+  [LANGUAGE.ENGLISH]: 'Failed to delete todo.',
+  [LANGUAGE.THAI]: 'ลบงานไม่สำเร็จ!',
+}
