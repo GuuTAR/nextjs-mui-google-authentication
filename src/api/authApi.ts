@@ -2,9 +2,9 @@ import { AxiosResponse } from 'axios'
 
 import { STATUS_CODE } from '@/enum/global'
 
-import { ApiService, createLocalApiService } from '@/services/apiService'
+import { ApiService } from '@/services/apiService'
 
-class AuthAPI {
+export class AuthAPI {
   private api: ApiService
 
   constructor(apiService: ApiService) {
@@ -33,5 +33,3 @@ class AuthAPI {
     }
   }
 }
-
-export const authApi = new AuthAPI(createLocalApiService())
