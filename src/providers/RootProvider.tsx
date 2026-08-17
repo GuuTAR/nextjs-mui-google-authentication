@@ -10,6 +10,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { theme } from '@/theme/theme'
 
 import { AppDataProvider } from '@/providers/AppDataProvider'
+import { TodoDataProvider } from '@/providers/TodoDataProvider'
 import { UserDataProvider } from '@/providers/UserDataProvider'
 
 import Notification from '@/views/components/core/Notification'
@@ -24,14 +25,16 @@ export default function RootProvider({ children }: Props) {
     <AppRouterCacheProvider>
       <AppDataProvider>
         <UserDataProvider>
-          <ThemeProvider theme={theme}>
-            <Notification />
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <Stack>
-                <Rendering>{children}</Rendering>
-              </Stack>
-            </LocalizationProvider>
-          </ThemeProvider>
+          <TodoDataProvider>
+            <ThemeProvider theme={theme}>
+              <Notification />
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <Stack>
+                  <Rendering>{children}</Rendering>
+                </Stack>
+              </LocalizationProvider>
+            </ThemeProvider>
+          </TodoDataProvider>
         </UserDataProvider>
       </AppDataProvider>
     </AppRouterCacheProvider>
