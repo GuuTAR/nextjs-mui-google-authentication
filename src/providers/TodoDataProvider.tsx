@@ -1,4 +1,4 @@
-import { ReactNode, createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { ReactNode, createContext, useCallback, useContext, useMemo, useState } from 'react'
 
 import { DisplayTodo, TodoRecord } from '@/types/Todo'
 
@@ -8,6 +8,8 @@ import { createApiService } from '@/services/apiService'
 import { todoService } from '@/services/todoService'
 
 import { useUserData } from '@/providers/UserDataProvider'
+
+import useInitialGetAPI from '@/hooks/useInitialGetAPI'
 
 type TodoDataContextType = {
   displayTodos: DisplayTodo[] | undefined
@@ -33,11 +35,6 @@ export const TodoDataProvider = ({ children }: Props) => {
     return new TodoAPI(createApiService(userToken))
   }, [userToken])
 
-  useEffect(() => {
-    if (!userToken) return
-    getTodos()
-  }, [userToken])
-
   const getTodos = useCallback(async (): Promise<boolean> => {
     if (!todoApi) return false
     const todosRecord: TodoRecord[] | undefined = await todoApi.getTodos()
@@ -45,6 +42,12 @@ export const TodoDataProvider = ({ children }: Props) => {
     setDisplayTodos(todoService.renderTodos(todosRecord))
     return true
   }, [todoApi])
+
+  const handleTodosSuccess = useCallback((todosRecord: TodoRecord[]) => {
+    setDisplayTodos(todoService.renderTodos(todosRecord))
+  }, [])
+
+  useInitialGetAPI(todoApi?.getTodos, handleTodosSuccess)
 
   const createTodo = useCallback(
     async (title: string): Promise<boolean> => {
@@ -65,7 +68,7 @@ export const TodoDataProvider = ({ children }: Props) => {
       return false
     }
     return await getTodos()
-  }, [todoApi, displayTodos, getTodos])
+  }, [todoApi, getTodos])
 
   const toggleTodoStatus = useCallback(
     async (id: string): Promise<boolean> => {
