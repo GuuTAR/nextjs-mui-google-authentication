@@ -134,7 +134,7 @@ export const UserDataProvider = ({ children }: Props) => {
       })
       return
     }
-  }, [handleShowNotification, language, router])
+  }, [handleShowNotification, authApi, language, router])
 
   const handleDemoLogin = useCallback(async () => {
     try {
@@ -176,7 +176,7 @@ export const UserDataProvider = ({ children }: Props) => {
         severity: ALERT_COLOR.ERROR,
       })
     }
-  }, [handleShowNotification, language, router])
+  }, [handleShowNotification, authApi, language, router])
 
   const handleLogout = useCallback(async () => {
     try {
@@ -213,7 +213,7 @@ export const UserDataProvider = ({ children }: Props) => {
       })
       return
     }
-  }, [handleShowNotification, language, router])
+  }, [handleShowNotification, authApi, language, router])
 
   return (
     <UserDataContext.Provider
