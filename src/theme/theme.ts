@@ -1,5 +1,6 @@
 import { createTheme, Theme } from '@mui/material'
 
+import { getMuiAlert } from './alert'
 import { getMuiAppBar } from './appBar'
 import { getMuiButton } from './button'
 import { getMuiCheckbox } from './checkbox'
@@ -20,6 +21,7 @@ export const theme: Theme = createTheme({
 
 theme.components = {
   ...theme.components,
+  MuiAlert: getMuiAlert(theme),
   MuiAppBar: getMuiAppBar(theme),
   MuiButton: getMuiButton(theme),
   MuiCheckbox: getMuiCheckbox(theme),

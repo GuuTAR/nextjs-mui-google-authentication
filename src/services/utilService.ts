@@ -17,16 +17,13 @@ class UtilService {
    * getDisplayNameInitials("", "john@example.com")         // "J"
    * getDisplayNameInitials("", "")                         // "U"
    */
-  public getDisplayNameInitials = (displayName: string, email: string): string => {
-    if (displayName) {
-      return displayName
-        .split(' ')
-        .map((n) => n[0])
-        .join('')
-        .toUpperCase()
-        .slice(0, 2)
-    }
-    return email?.[0]?.toUpperCase() ?? 'U'
+  public getDisplayNameInitials = (displayName: string): string => {
+    return displayName
+      .split(' ')
+      .map((n) => n[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2)
   }
 
   /**

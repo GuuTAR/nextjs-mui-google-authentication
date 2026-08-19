@@ -15,12 +15,6 @@ import { firebaseClient } from '@/libs/firebase-client'
 import { ALERT_COLOR } from '@/enum/global'
 
 import { DISPLAY_DEMO_USER } from '@/data/demo'
-
-import { authApi } from '@/api/authApi'
-
-import { configService } from '@/services/configService'
-
-import { useAppData } from '@/providers/AppDataProvider'
 import {
   AUTH_UNAVAILABLE_MESSAGE,
   LOGIN_FAILURE_MESSAGE,
@@ -30,11 +24,19 @@ import {
   SESSION_CREATE_FAILURE_MESSAGE,
 } from '@/lang/auth'
 
+import { AuthAPI } from '@/api/authApi'
+
+import { createLocalApiService } from '@/services/apiService'
+import { configService } from '@/services/configService'
+
+import { useAppData } from '@/providers/AppDataProvider'
+
 export type UserDataContextType = {
-  userId: string
-  userEmail: string
-  userDisplayName: string
-  userPhotoURL: string
+  userId?: string
+  userToken?: string
+  userEmail?: string
+  userDisplayName?: string
+  userPhotoURL?: string
   isDemoUser: boolean
   handleLogin: () => Promise<void>
   handleDemoLogin: () => Promise<void>
@@ -52,22 +54,29 @@ export const UserDataProvider = ({ children }: Props) => {
 
   const { language, handleShowNotification } = useAppData()
 
-  const [userId, setUserId] = useState<string>('')
-  const [userEmail, setUserEmail] = useState<string>('')
-  const [userDisplayName, setUserDisplayName] = useState<string>('')
-  const [userPhotoURL, setUserPhotoURL] = useState<string>('')
+  const [userId, setUserId] = useState<string | undefined>(undefined)
+  const [userToken, setUserToken] = useState<string | undefined>(undefined)
+  const [userEmail, setUserEmail] = useState<string | undefined>(undefined)
+  const [userDisplayName, setUserDisplayName] = useState<string | undefined>(undefined)
+  const [userPhotoURL, setUserPhotoURL] = useState<string | undefined>(undefined)
 
   const isDemoUser: boolean = useMemo(() => {
     return userId === configService.getConfig().demoUid
   }, [userId])
 
+  const authApi: AuthAPI = useMemo(() => {
+    return new AuthAPI(createLocalApiService())
+  }, [])
+
   useEffect(() => {
     const firebaseAuth: Auth | undefined = firebaseClient.getAuth()
     if (!firebaseAuth) return
 
-    const unsubscribe = firebaseAuth.onAuthStateChanged((user) => {
+    const unsubscribe = firebaseAuth.onAuthStateChanged(async (user) => {
       const _isDemoUser: boolean = user?.uid === configService.getConfig().demoUid
 
+      setUserId(user?.uid || '')
+      setUserToken((await user?.getIdToken()) || '')
       setUserEmail(_isDemoUser ? DISPLAY_DEMO_USER.email : user?.email || '')
       setUserDisplayName(_isDemoUser ? DISPLAY_DEMO_USER.displayName : user?.displayName || '')
       setUserPhotoURL(_isDemoUser ? DISPLAY_DEMO_USER.photoURL : user?.photoURL || '')
@@ -125,7 +134,7 @@ export const UserDataProvider = ({ children }: Props) => {
       })
       return
     }
-  }, [handleShowNotification, language, router])
+  }, [handleShowNotification, authApi, language, router])
 
   const handleDemoLogin = useCallback(async () => {
     try {
@@ -167,7 +176,7 @@ export const UserDataProvider = ({ children }: Props) => {
         severity: ALERT_COLOR.ERROR,
       })
     }
-  }, [handleShowNotification, language, router])
+  }, [handleShowNotification, authApi, language, router])
 
   const handleLogout = useCallback(async () => {
     try {
@@ -204,7 +213,7 @@ export const UserDataProvider = ({ children }: Props) => {
       })
       return
     }
-  }, [handleShowNotification, language, router])
+  }, [handleShowNotification, authApi, language, router])
 
   return (
     <UserDataContext.Provider
@@ -214,6 +223,7 @@ export const UserDataProvider = ({ children }: Props) => {
         userDisplayName,
         userPhotoURL,
         isDemoUser,
+        userToken,
         handleLogin,
         handleDemoLogin,
         handleLogout,
