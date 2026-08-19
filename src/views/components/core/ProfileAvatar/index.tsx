@@ -12,12 +12,12 @@ type Props = {
 }
 
 export default function ProfileAvatar({ width, height }: Props) {
-  const { userDisplayName, userEmail, userPhotoURL } = useUserData()
+  const { userDisplayName, userPhotoURL } = useUserData()
 
-  const userInitials: string = useMemo(
-    () => utilService.getDisplayNameInitials(userDisplayName, userEmail),
-    [userDisplayName, userEmail],
-  )
+  const userInitials: string = useMemo(() => {
+    if (!userDisplayName) return 'U'
+    return utilService.getDisplayNameInitials(userDisplayName)
+  }, [userDisplayName])
 
   return (
     <Styles.ProfileAvatarContainer width={width} height={height}>
