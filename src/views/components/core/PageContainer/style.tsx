@@ -18,4 +18,5 @@ export const PageContent = styled(Stack, { shouldForwardProp: (prop) => prop !==
 
 export const StyledContainer = styled(Container)(({ theme }) => ({
   paddingBottom: theme.spacing(BOTTOM_NAVBAR_HEIGHT / 8 + 6),
+  paddingTop: theme.spacing(3),
 }))

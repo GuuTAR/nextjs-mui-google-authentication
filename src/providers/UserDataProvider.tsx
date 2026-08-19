@@ -197,6 +197,8 @@ export const UserDataProvider = ({ children }: Props) => {
         })
         return
       }
+      router.push('/login')
+
       await signOut(firebaseAuth)
       setUserId('')
 
@@ -204,7 +206,6 @@ export const UserDataProvider = ({ children }: Props) => {
         message: LOGOUT_SUCCESS_MESSAGE[language],
         severity: ALERT_COLOR.SUCCESS,
       })
-      router.push('/login')
     } catch (error) {
       console.error(error)
       handleShowNotification({

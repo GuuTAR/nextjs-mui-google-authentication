@@ -2,8 +2,6 @@
 
 import { useCallback, useMemo, useState } from 'react'
 
-import { Typography } from '@mui/material'
-
 import { DisplayTodo } from '@/types/Todo'
 import { ALERT_COLOR } from '@/enum/global'
 
@@ -11,9 +9,9 @@ import { useAppData } from '@/providers/AppDataProvider'
 import { useTodoData } from '@/providers/TodoDataProvider'
 import { useUserData } from '@/providers/UserDataProvider'
 
-import BoldText from '@/views/components/core/BoldText'
 import CoreGroupButton from '@/views/components/core/CoreGroupButton'
 import PageContainer from '@/views/components/core/PageContainer'
+import PageHeader from '@/views/components/core/PageHeader'
 
 import TodoInput from '@/views/pages/TodoPage/section/TodoInput'
 import TodoList from '@/views/pages/TodoPage/section/TodoList'
@@ -106,15 +104,10 @@ export default function TodoPage() {
     <PageContainer isShowAppMenu>
       <Styles.Root>
         <Styles.Content>
-          <Styles.GreetingSection>
-            <BoldText variant="h4" color="textPrimary">
-              {Languages.WELCOME_BACK[language]}
-              {userDisplayName ? `, ${userDisplayName}` : ''}
-            </BoldText>
-            <Typography variant="body1" color="textSecondary">
-              {Languages.SUBTITLE[language]}
-            </Typography>
-          </Styles.GreetingSection>
+          <PageHeader
+            title={`${Languages.WELCOME_BACK[language]}, ${userDisplayName ? userDisplayName : ''}`}
+            subtitle={Languages.SUBTITLE[language]}
+          />
           <TodoInput onAdd={handleCreateTodo} />
           <Styles.FilterRow>
             <CoreGroupButton

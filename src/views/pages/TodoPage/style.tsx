@@ -35,16 +35,12 @@ export const UserAvatar = styled(Avatar)(({ theme }) => ({
 export const Content = styled(Stack)(({ theme }) => ({
   width: '100%',
   maxWidth: 640,
-  padding: theme.spacing(6, 3),
+  padding: theme.spacing(0, 3),
   gap: theme.spacing(3),
 
   [theme.breakpoints.down('sm')]: {
     padding: theme.spacing(4, 2),
   },
-}))
-
-export const GreetingSection = styled(Stack)(({ theme }) => ({
-  gap: theme.spacing(0.5),
 }))
 
 export const FilterRow = styled(Stack)(() => ({
