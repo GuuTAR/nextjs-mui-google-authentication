@@ -1,13 +1,9 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios'
 
-import { configService } from '@/services/configService'
-
 export class ApiService {
   private api: AxiosInstance
 
-  constructor(backendUrl: string, authToken?: string) {
-    const { apiTimeout } = configService.getConfig()
-
+  constructor(backendUrl: string, apiTimeout: number, authToken?: string) {
     if (!authToken) {
       this.api = axios.create({
         baseURL: backendUrl,
@@ -46,12 +42,10 @@ export class ApiService {
   }
 }
 
-export const createApiService = (authToken?: string): ApiService => {
-  const { backendUrl } = configService.getConfig()
-
-  return new ApiService(backendUrl, authToken)
+export const createApiService = (backendUrl: string, apiTimeout: number, authToken?: string): ApiService => {
+  return new ApiService(backendUrl, apiTimeout, authToken)
 }
 
-export const createLocalApiService = (authToken?: string): ApiService => {
-  return new ApiService('/', authToken)
+export const createLocalApiService = (apiTimeout: number, authToken?: string): ApiService => {
+  return new ApiService('/', apiTimeout, authToken)
 }

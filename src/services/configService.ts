@@ -1,29 +1,32 @@
-import { AppConfig } from '@/types/AppConfig'
+import { FirebaseOptions } from 'firebase/app'
+
+import { ServerAppConfig } from '@/types/AppConfig'
+import { BackendConfig } from '@/types/BackendConfig'
+import { DemoConfig } from '@/types/DemoConfig'
+
+import { ConfigAPI } from '@/api/configApi'
 
 class ConfigService {
-  private config: AppConfig
+  private configApi: ConfigAPI
 
   constructor() {
-    this.config = this.initialization()
+    this.configApi = new ConfigAPI()
   }
 
-  private initialization = (): AppConfig => {
+  public getBeckendConfig = async (): Promise<BackendConfig> => {
+    return await this.configApi.getBackendConfig()
+  }
+
+  public getDemoConfig = async (): Promise<DemoConfig> => {
+    return await this.configApi.getDemoConfig()
+  }
+
+  public getFirebaseClientConfig = async (): Promise<FirebaseOptions> => {
+    return await this.configApi.getFirebaseConfig()
+  }
+
+  public getServerConfig = (): ServerAppConfig => {
     return {
-      userSessionLifetimeDays: parseInt(process.env.USER_SESSION_LIFETIME_DAYS || '7'),
-      apiTimeout: parseInt(process.env.API_TIMEOUT || '5000'),
-      backendUrl: process.env.NEXT_PUBLIC_BACKEND_URL || '',
-      demoUser: process.env.NEXT_PUBLIC_DEMO_USER || '',
-      demoPassword: process.env.NEXT_PUBLIC_DEMO_PASSWORD || '',
-      demoUid: process.env.NEXT_PUBLIC_DEMO_UID || '',
-      firebaseConfig: {
-        apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || '',
-        authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || '',
-        projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || '',
-        storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || '',
-        messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || '',
-        appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || '',
-        measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID || '',
-      },
       firebaseAdminConfig: {
         projectId: process.env.FIREBASE_ADMIN_PROJECT_ID || '',
         privateKey: process.env.FIREBASE_ADMIN_PRIVATE_KEY
@@ -31,11 +34,8 @@ class ConfigService {
           : '',
         clientEmail: process.env.FIREBASE_ADMIN_CLIENT_EMAIL || '',
       },
+      userSessionLifetimeDays: parseInt(process.env.FIREBASE_ADMIN_SESSION_LIFETIME_DAYS || '7'),
     }
-  }
-
-  public getConfig = (): AppConfig => {
-    return this.config
   }
 }
 

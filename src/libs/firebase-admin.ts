@@ -1,14 +1,14 @@
 import { App, cert, getApps, initializeApp } from 'firebase-admin/app'
 import { Auth, getAuth } from 'firebase-admin/auth'
 
-import { AppConfig } from '@/types/AppConfig'
+import { ServerAppConfig } from '@/types/AppConfig'
 
 import { configService } from '@/services/configService'
 
 class FirebaseAdminClient {
   private app: App | undefined
 
-  constructor(config: AppConfig) {
+  constructor(config: ServerAppConfig) {
     const { firebaseAdminConfig } = config
 
     if (typeof firebaseAdminConfig === 'string') return
@@ -23,4 +23,4 @@ class FirebaseAdminClient {
   }
 }
 
-export const firebaseAdminClient = new FirebaseAdminClient(configService.getConfig())
+export const firebaseAdminClient = new FirebaseAdminClient(configService.getServerConfig())

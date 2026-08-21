@@ -7,6 +7,7 @@ import { TodoAPI } from '@/api/todoApi'
 import { createApiService } from '@/services/apiService'
 import { todoService } from '@/services/todoService'
 
+import { useAppData } from '@/providers/AppDataProvider'
 import { useUserData } from '@/providers/UserDataProvider'
 
 import useInitialGetAPI from '@/hooks/useInitialGetAPI'
@@ -26,14 +27,18 @@ type Props = {
 }
 
 export const TodoDataProvider = ({ children }: Props) => {
+  const { clientAppConfig } = useAppData()
   const { userToken } = useUserData()
 
   const [displayTodos, setDisplayTodos] = useState<DisplayTodo[] | undefined>(undefined)
 
   const todoApi: TodoAPI | undefined = useMemo(() => {
-    if (!userToken) return
-    return new TodoAPI(createApiService(userToken))
-  }, [userToken])
+    if (!userToken || !clientAppConfig) return
+    const {
+      backend: { backendUrl, apiTimeout },
+    } = clientAppConfig
+    return new TodoAPI(createApiService(backendUrl, apiTimeout, userToken))
+  }, [userToken, clientAppConfig])
 
   const getTodos = useCallback(async (): Promise<boolean> => {
     if (!todoApi) return false
