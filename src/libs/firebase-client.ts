@@ -1,15 +1,15 @@
 import { initializeApp, getApps, getApp, FirebaseApp } from 'firebase/app'
 import { Auth, getAuth } from 'firebase/auth'
 
-import { AppConfig } from '@/types/AppConfig'
-
 import { configService } from '@/services/configService'
 
-class FirebaseClient {
+export class FirebaseClient {
   private app: FirebaseApp | undefined
 
-  constructor(config: AppConfig) {
-    this.app = getApps().length > 0 ? getApp() : initializeApp(config.firebaseConfig)
+  constructor() {
+    configService.getFirebaseClientConfig().then((firebaseConfig) => {
+      this.app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig)
+    })
   }
 
   public getAuth = (): Auth | undefined => {
@@ -18,4 +18,4 @@ class FirebaseClient {
   }
 }
 
-export const firebaseClient = new FirebaseClient(configService.getConfig())
+export const firebaseClient = new FirebaseClient()

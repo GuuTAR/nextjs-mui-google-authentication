@@ -52,7 +52,7 @@ type Props = {
 export const UserDataProvider = ({ children }: Props) => {
   const router = useRouter()
 
-  const { language, handleShowNotification } = useAppData()
+  const { clientAppConfig, language, handleShowNotification } = useAppData()
 
   const [userId, setUserId] = useState<string | undefined>(undefined)
   const [userToken, setUserToken] = useState<string | undefined>(undefined)
@@ -61,19 +61,20 @@ export const UserDataProvider = ({ children }: Props) => {
   const [userPhotoURL, setUserPhotoURL] = useState<string | undefined>(undefined)
 
   const isDemoUser: boolean = useMemo(() => {
-    return userId === configService.getConfig().demoUid
-  }, [userId])
+    const demoUid = clientAppConfig?.demo.demoUid
+    return userId === demoUid
+  }, [clientAppConfig, userId])
 
-  const authApi: AuthAPI = useMemo(() => {
-    return new AuthAPI(createLocalApiService())
-  }, [])
+  const authApi: AuthAPI | undefined = useMemo(() => {
+    return new AuthAPI(createLocalApiService(clientAppConfig?.backend.apiTimeout ?? 5000))
+  }, [clientAppConfig])
 
   useEffect(() => {
     const firebaseAuth: Auth | undefined = firebaseClient.getAuth()
     if (!firebaseAuth) return
 
     const unsubscribe = firebaseAuth.onAuthStateChanged(async (user) => {
-      const _isDemoUser: boolean = user?.uid === configService.getConfig().demoUid
+      const _isDemoUser: boolean = user?.uid === clientAppConfig?.demo.demoUid
 
       setUserId(user?.uid || '')
       setUserToken((await user?.getIdToken()) || '')
@@ -83,7 +84,7 @@ export const UserDataProvider = ({ children }: Props) => {
     })
 
     return () => unsubscribe()
-  }, [])
+  }, [clientAppConfig])
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -147,11 +148,8 @@ export const UserDataProvider = ({ children }: Props) => {
         return
       }
 
-      const result: UserCredential = await signInWithEmailAndPassword(
-        firebaseAuth,
-        configService.getConfig().demoUser,
-        configService.getConfig().demoPassword,
-      )
+      const { demoUser, demoPassword } = await configService.getDemoConfig()
+      const result: UserCredential = await signInWithEmailAndPassword(firebaseAuth, demoUser, demoPassword)
       const idToken: string = await result.user.getIdToken()
 
       const isSessionSet: boolean = await authApi.login(idToken)

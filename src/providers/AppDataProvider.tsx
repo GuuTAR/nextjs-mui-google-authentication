@@ -1,12 +1,15 @@
 import { createContext, ReactNode, useCallback, useContext, useEffect, useState } from 'react'
 
+import { ClientAppConfig } from '@/types/AppConfig'
 import { NotificationDetail } from '@/types/Notification'
-
 import { LANGUAGE } from '@/enum/global'
 
+import { configService } from '@/services/configService'
 import { localStorageService } from '@/services/localStorageService'
 
 export type AppDataContextType = {
+  clientAppConfig: ClientAppConfig | undefined
+
   displayName: string
   setDisplayName: (displayName: string) => void
 
@@ -27,6 +30,8 @@ type Props = {
 }
 
 export const AppDataProvider = ({ children }: Props) => {
+  const [clientAppConfig, setClientAppConfig] = useState<ClientAppConfig | undefined>(undefined)
+
   const [isDataLoaded, setIsDataLoaded] = useState<boolean>(false)
 
   const [displayName, _setDisplayName] = useState<string>('')
@@ -43,6 +48,14 @@ export const AppDataProvider = ({ children }: Props) => {
   // Initialization
   useEffect(() => {
     const initialize = async () => {
+      const [backend, demo, firebaseConfig] = await Promise.all([
+        configService.getBeckendConfig(),
+        configService.getDemoConfig(),
+        configService.getFirebaseClientConfig(),
+      ])
+
+      setClientAppConfig({ backend, demo, firebaseConfig })
+
       _setDisplayName(localStorageService.getValue('displayName') ?? '')
       const savedLanguage = localStorageService.getValue('language') as LANGUAGE | null
       if (savedLanguage) _setLanguage(savedLanguage)
@@ -76,6 +89,7 @@ export const AppDataProvider = ({ children }: Props) => {
   return (
     <AppDataContext.Provider
       value={{
+        clientAppConfig,
         displayName,
         setDisplayName,
         language,

@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
     // Create a user session using the ID token and set the session cookie
     const isCreated: boolean = await authService.createUserSession(
       idToken,
-      configService.getConfig().userSessionLifetimeDays,
+      configService.getServerConfig().userSessionLifetimeDays,
     )
     if (!isCreated) {
       return utilService.responseBody(STATUS_CODE.INTERNAL_SERVER_ERROR, { message: 'Failed to create user session' })
